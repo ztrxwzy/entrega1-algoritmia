@@ -1,48 +1,182 @@
 """
 -----------------------------------------------------------------------------------------------
-Título: practica clase 05 
-Fecha:23-9
-Autor:Carbonari Santino
+Título: Trabajo Practico grupal
+Fecha: 08/11
+Autores: Santino Bautista Carbonari, Leando Ochoa, Kiara Notaro, Jesus Caldera, Lucas Garcia Cespedes.
 
 Descripción:
 
 Pendientes:
 -----------------------------------------------------------------------------------------------
 """
+
 #----------------------------------------------------------------------------------------------
 # MÓDULOS IMPORT
 #----------------------------------------------------------------------------------------------
-import random 
+import random
 
 
 #----------------------------------------------------------------------------------------------
 # FUNCIONES
 #----------------------------------------------------------------------------------------------
+
 def separadorAsterisco():
-    for i in range(50):
+    """
+    Imprime una línea de 50 asteriscos para separar visualmente las distintas secciones del programa.
+    Parámetros:
+        Ninguno.
+
+    Retorno:
+        Ninguno.
+    """
+
+    for i in range(60):
         print("*",end="")
     print()
 
-def generarNumeros(numeros):
+def mostrar_valores(lista, titulo):
+    """
+    Muestra los números que se encuentren en la lista en una tabla de 10 columnas.
+
+    Parámetros:
+        - lista: lista de los números que se quieren mostrar.
+        - titulo: texto que se muestra como título (en la tabla).
+
+    Retorno:
+        - No retorna valores.
+    """
     
+    separadorAsterisco()
+    print(titulo)
+    separadorAsterisco()
+
+
+    print("A\tB\tC\tD\tE\tF\tG\tH\tI\tJ")
+
+    print("=======\t=======\t=======\t=======\t=======\t=======\t=======\t=======\t=======\t=======")
+
+    print()
+
+
+    cantidadenfila = 0
+
+    for numero in lista:
+        print(numero, end="\t")
+        cantidadenfila = cantidadenfila + 1
+
+        if cantidadenfila == 10:
+            print()
+            cantidadenfila = 0
+
+    print()
+    separadorAsterisco()
+
     
-    if len(numeros) > 0:
-        respuesta = input("Lista detectada ¿desea remplazarla? (si = 1) (no = 0) ")
-        if respuesta == "1": 
-            numeros.clear()
-            
-        else:
-            return numeros
+def eliminar_repetidos(lista):
+    """
+    Crea una nueva lista sin valores repetidos, conservando el orden de aparición de la lista "original".
+
+    Parámetros:
+        - lista_original: lista de números (que se van a revisar).
+
+    Retorno:
+        - Una lista nueva, contiene los valores sin repetir.
+    """
+
     
-    cantidad = int(input("¿Cuántos números querés generar? "))
+    lista_2 = lista[:]       #lista_2 es una copia de la original
+    lista_sin_repetidos = []
+    num_eliminados = 0
+
     
-    
-    for i in range (0,cantidad):
-        numero =  random.randint (0,99999)
-        numeros.append(numero)
-    return numeros
+    for numero in lista_2:
+        repetido = False              #asumo que el num no esta repetido
+
         
-def valoresTopN(numeros):
+        for num_guardado in lista_sin_repetidos:
+
+            if numero == num_guardado:  
+                repetido = True         #esta repetido => no lo agrega
+
+        if repetido == False:
+            lista_sin_repetidos.append(numero)
+
+        else:
+            num_eliminados = num_eliminados + 1
+
+    print("Cantidad de valores eliminados:", num_eliminados)
+
+
+    return lista_sin_repetidos
+
+
+def punto_3(lista):
+    """
+    Realiza el punto 3: elimina los repetidos y muestra la lista resultante.
+
+    Parámetros:
+        - lista_original: lista de números generados en pto. 1.
+
+    Retorno:
+        - No retorna ningún valor.
+    """
+    if len(lista) == 0:
+        print("Primero debe generar los valores.")
+        return
+
+    lista_sin_repetidos = eliminar_repetidos(lista)  
+
+    mostrar_valores(lista_sin_repetidos, "VALORES DEL JUEGO DE DATOS (DATOS SIN REPETIDOS)")
+
+def generarNumeros(lista):
+
+    """
+    Genera números aleatorios y los almacena en una lista.
+    Si la lista ya contiene elementos, pregunta si se desea reemplazarla.
+    
+    Parametros:
+    
+        lista (list): Lista donde se almacenarán los números.
+
+    Retorno:
+        list: Lista con los números generados.
+    
+    
+    """
+    
+    if len(lista) > 0:
+        entradaCorrecta = False
+        while not entradaCorrecta:
+            respuesta = input("Lista detectada ¿desea remplazarla? (si = 1) (no = 0) ")
+            if respuesta == "1": 
+                lista.clear()
+                entradaCorrecta = True
+            elif respuesta == "0":
+                return lista
+            else:
+                print("Introduciste un valor erroneo.")
+    
+    entradaCorrecta = False
+    while not entradaCorrecta:
+        cantidad = input("¿Cuántos números querés generar? ")
+        if cantidad.isdigit(): 
+            cantidad = int(cantidad)
+            if cantidad >= 2:
+                entradaCorrecta = True
+            else:
+                print("La cantidad debe ser mayor o igual a 2")    
+        else:
+            print("Solo puedes introducir digitos.")
+
+
+    for i in range(0, cantidad):
+        numero = random.randint(0, 99999)
+        lista.append(numero)
+    print (lista)
+
+    return lista
+        
+def valoresTopN(lista):
     """
     Identifica y muestra los N valores mayores únicos de una lista.
 
@@ -53,7 +187,7 @@ def valoresTopN(numeros):
         Ninguno.
     """
 
-    if len(numeros) == 0:
+    if len(lista) == 0:
         print("Primero debe generar los valores.")
         return
     entradaValida = False
@@ -75,25 +209,23 @@ def valoresTopN(numeros):
 
     while len(ranking) < n:
         mayor = None
-
-        for numero in numeros:
+        for numero in lista:
             if numero not in ranking:
                 if mayor is None or numero > mayor:
                     mayor = numero
-
         if mayor is None:
             break
 
         ranking.append(mayor)
 
-    print("*******************************************************************************")
+    separadorAsterisco()
     print("VALORES DEL JUEGO DE DATOS (DATOS TOP N)")
-    print("*******************************************************************************")
+    separadorAsterisco()
 
     for i in range(len(ranking)):
         print(i + 1, ". ", ranking[i], sep="")
 
-    print("*******************************************************************************")
+    separadorAsterisco()
 
     if len(ranking) < n:
         print("Se solicitaron", n, "valores, pero solo existen",
@@ -105,17 +237,25 @@ def valoresTopN(numeros):
 
 def validacionLetra(letrasValidas, caracter):
     """
-    Valida la letra ingresada verificando que esté en la lista de letras válidas
+    Comprueba si el carácter ingresado se encuentra dentro
+    de una lista de caracteres permitidos.
 
-    Parametros:
-        letrasValidas (list): lista de letras válidas
-        caracter (str): caracter que el usuario ingresa y será validado
+    Parámetros:
+        letrasValidas (list): Lista de caracteres aceptados.
+        caracter (str): Carácter ingresado que será evaluado.
+
+    Retorno:
+        bool: True si el carácter es válido, False en caso contrario.
     """
+    bucle = True
     validacion = False
-    while not validacion:
+    while bucle:
         if caracter not in letrasValidas:
             print("Caracter ingresado invalido.")
+            bucle = False
+            validacion = False
         else:
+            bucle = False
             validacion = True
     return validacion
 
@@ -161,10 +301,13 @@ def filtrar(lista):
     letrasValidas = ["M", "m", "E", "e", "R", "r", "P", "p", "I", "i"]
     listaFiltrada = []
     
-    criterio = input("Ingrese el criterio de filtrado [M=Mayores que | E=Menores que | R=En rango | P=Pares | I=Impares]:")
-    
-    validacion = validacionLetra(letrasValidas, criterio)
-    
+    valorErroneo = True
+    while valorErroneo:
+        criterio = input("Ingrese el criterio de filtrado [M=Mayores que | E=Menores que | R=En rango | P=Pares | I=Impares]:")
+        validacion = validacionLetra(letrasValidas, criterio)
+        if validacion:
+            valorErroneo = False
+
     if validacion:
         
         if (criterio == "M" or criterio == "m"):
@@ -182,7 +325,7 @@ def filtrar(lista):
         else:
             listaFiltrada = numerosImpar(lista)
             
-    mostrar_tabla(listaFiltrada, "VALORES DEL JUEGO DE DATOS (DATOS FILTRADOS)")
+    mostrar_valores(listaFiltrada, "VALORES DEL JUEGO DE DATOS (DATOS FILTRADOS)")
             
 def criterioMayor(lista):
     
@@ -231,7 +374,7 @@ def criterioMenor(lista):
 def criterioRango(lista):
     
     """
-        Filtra una lista de numeros, solo guarda los numeros dentro del rango indicado indicado.
+        Filtra una lista de numeros, solo guarda los numeros dentro del rango indicado.
             
         Parametro:
             lista (list): lista de numeros
@@ -242,8 +385,8 @@ def criterioRango(lista):
     
     listaFiltrada = []
     
-    minimo = pedir_numero("Ingrese el mínimo: ", 0, 999)
-    maximo = pedir_numero("Ingrese el maximo: ", 0, 999)
+    minimo = pedir_numero("Ingrese el mínimo: ", 0, 99999)
+    maximo = pedir_numero("Ingrese el maximo: ", minimo, 99999)
     
     for i in lista:
         if i <= maximo and i >= minimo:
@@ -252,16 +395,16 @@ def criterioRango(lista):
     return listaFiltrada
 
 def numerosPar(lista):
-    
     """
-        Filtra una lista de numeros, solo guarda los numeros pares.
-            
-        Parametro:
-            lista (list): lista de numeros
-            
-        Retorna:
-            None
-        """
+    Filtra los números pares de una lista y los almacena
+    en una nueva lista sin modificar la original.
+
+    Parámetros:
+        lista (list): Lista de números enteros que serán filtrados.
+
+    Retorno:
+        list: Nueva lista que contiene únicamente los números pares.
+    """
     
     listaFiltrada = []
     
@@ -269,32 +412,43 @@ def numerosPar(lista):
         if i % 2 == 0:
             listaFiltrada.append(i)
 
-    print("Valores pares:")
-    mostrar_tabla(listaFiltrada, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    return listaFiltrada
 
 def numerosImpar(lista):
     
     """
-        Filtra una lista de numeros, solo guarda los numeros impares.
-                
-        Parametro:
-            lista (list): lista de numeros
-                
-        Retorna:
-            None
-            """
+    Filtra los números impares de una lista y los almacena
+    en una nueva lista sin modificar la original.
+
+    Parámetros:
+        lista (list): Lista de números enteros que serán filtrados.
+
+    Retorno:
+        list: Nueva lista que contiene únicamente los números impares.
+    """
     
     listaFiltrada = []
     
     for i in lista:
         if i % 2 != 0:
             listaFiltrada.append(i)
-                    
-    print("Valores impares:")
-    mostrar_tabla(listaFiltrada, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+                
+    return listaFiltrada
 
 
 def criterioCantCifras(lista):
+    """
+    Clasifica los números de una lista según su cantidad de cifras,
+    generando cinco listas independientes con valores de 1 a 5 cifras.
+    Posteriormente muestra cada lista en pantalla.
+
+    Parámetros:
+        lista (list): Lista de números enteros que serán clasificados.
+
+    Retorno:
+        None.
+    """
+
     listaUnaCifra = []
     listaDosCifras = []
     listaTresCifras = []
@@ -314,15 +468,17 @@ def criterioCantCifras(lista):
             listaCincoCifras.append(i)
 
     print("Valores de 1 cifra:")
-    mostrar_tabla(listaUnaCifra, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(listaUnaCifra, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
     print("Valores de 2 cifras:")
-    mostrar_tabla(listaDosCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(listaDosCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
     print("Valores de 3 cifras:")
-    mostrar_tabla(listaTresCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(listaTresCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
     print("Valores de 4 cifras:")
-    mostrar_tabla(listaCuatroCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(listaCuatroCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
     print("Valores de 5 cifras:")
-    mostrar_tabla(listaCincoCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(listaCincoCifras, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    
+    
 
 def criterioPorValor(lista):
     """
@@ -343,9 +499,9 @@ def criterioPorValor(lista):
         else:
             sobre_umbral.append(valor)
     print("Valores hasta el umbral (inclusive):")
-    mostrar_tabla(hasta_umbral, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(hasta_umbral, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
     print("Valores por encima del umbral:")
-    mostrar_tabla(sobre_umbral, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+    mostrar_valores(sobre_umbral, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
 
 
 def desdoblamiento(lista):
@@ -364,32 +520,153 @@ def desdoblamiento(lista):
         return
     
     letrasValidas = ["P", "p", "C", "c", "U", "u"] 
-    
-    criterio = input("Ingrese el criterio de desdoblamiento [P=Pares/Impares | C=Por cantidad de cifras | U=Por valor umbral]: ")
-    
-    validacion = validacionLetra(letrasValidas, criterio)
+
+    valorErroneo = False
+    while not valorErroneo:
+        criterio = input("Ingrese el criterio de desdoblamiento [P=Pares/Impares | C=Por cantidad de cifras | U=Por valor umbral]: ")        
+        validacion = validacionLetra(letrasValidas, criterio)
+        if validacion:
+            valorErroneo = True
     
     if validacion:
-            
             if (criterio == "P" or criterio == "p"):
-                numerosPar(lista)
-                numerosImpar(lista)
+                listaPares = numerosPar(lista)
+                listaImpares = numerosImpar(lista)
+                mostrar_valores(listaPares, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
+                mostrar_valores(listaImpares, "VALORES DEL JUEGO DE DATOS (DATOS DESDOBLADOS)")
             
             elif criterio == "C" or criterio == "c":
                 criterioCantCifras(lista)
 
             else:
                 criterioPorValor(lista)
- 
+
+def valoresMaximosMinimos(lista):
+    """
+    Identifica los valores máximo y mínimo de una lista de números enteros. 
+    Destacando los máximos entre corchetes [], los mínimos entre paréntesis ()
+    y los valores que sean máximo y mínimo al mismo tiempo entre <>.
+
+    Parámetros:
+        lista (list): Lista de números enteros que serán analizados.
+
+    Retorno:
+        None.
+    """
+    
+    if len(lista) == 0:
+        print("Primero debe generar los valores.")
+        return
+
+    listaNueva = lista
+    maximo = lista[0]
+    minimo = lista[0]
+
+    for numero in listaNueva:
+        if numero > maximo:
+            maximo = numero
+        if numero < minimo:
+            minimo = numero
+    
+    separadorAsterisco()
+    print("VALORES DEL JUEGO DE DATOS (DATOS MÁXIMOS Y MÍNIMOS [máx] (mín) <máx/mín>)")
+    separadorAsterisco()
+    print("A\tB\tC\tD\tE\tF\tG\tH\tI\tJ")
+    print("=======\t=======\t=======\t=======\t=======\t=======\t=======\t=======\t=======\t=======")
+    print()
+
+    cantidadenfila = 0
+    for numero in lista:
+        if numero == maximo and numero == minimo:
+            print("<", numero, ">", sep="", end="\t")
+        elif numero == maximo:
+            print("[", numero, "]", sep="", end="\t")
+        elif numero == minimo:
+            print("(", numero, ")", sep="", end="\t")
+        else:
+            print(numero, end="\t")
+        cantidadenfila = cantidadenfila + 1
+        if cantidadenfila == 10:
+            print()
+            cantidadenfila = 0
+    print()
+    separadorAsterisco()
+        
+
+
 
 #----------------------------------------------------------------------------------------------
 # CUERPO PRINCIPAL
 #----------------------------------------------------------------------------------------------
 def main():
-    numeros = []
-    separadorAsterisco()
-    numeros = generarNumeros(numeros)
-    print(numeros)
-    valoresTopN(numeros)
+    """
+    Función principal del programa.
+    Inicializa la lista de números y ejecuta el menú principal,
+    permitiendo al usuario seleccionar las distintas operaciones
+    disponibles hasta que decida salir.
 
+    Parámetros:
+        Ninguno.
+
+    Retorno:
+        None.
+    """
+    
+    numeros = []
+    lista = []
+    
+    
+    while True:
+        while True:
+            opciones = 7	
+            print()
+            print("---------------------------")
+            print("MENÚ DEL PROGRAMA           ")
+            print("---------------------------")
+            print("[1] ... Generar valores ...")
+            print("[2] ... Mostrar valores ...")
+            print("[3] ... Eliminar valores repetidos ...")
+            print("[4] ... Filtrar valores ...")
+            print("[5] ... Desdoblar valores  ")
+            print("[6] ... Valores top N  ")
+            print("[7] ... Valores maximos y minimos  ")            
+            print("---------------------------")
+            print("[0] Salir del programa")
+            print("---------------------------")
+            print()
+            
+            opcion = input("Seleccione una opción: ")
+            if opcion in [str(i) for i in range(0, opciones + 1)]: # Sólo continua si se elije una opcion de menú válida
+                break
+            else:
+                input("Opción inválida. Presione ENTER para volver a seleccionar.")
+        print()
+
+        if opcion == "0": # Opción salir del programa
+            exit() # También puede ser sys.exit() para lo cual hay que importar el módulo sys
+
+        elif opcion == "1":   # Opción 1
+            generarNumeros(lista)
+        elif opcion == "2":   # Opción 2
+            if len(lista) == 0:
+                print("Primero debe generar los valores.")
+            else:
+                mostrar_valores(lista, "VALORES DEL JUEGO DE DATOS (TODOS LOS DATOS)")
+        elif opcion == "3":   # Opción 3
+            punto_3(lista)
+        elif opcion == "4":   # Opción 4
+            filtrar(lista)
+        elif opcion == "5":   # Opción 5
+            desdoblamiento(lista)
+        elif opcion == "6":   # Opción 6
+            valoresTopN(lista)
+        elif opcion == "7":   # Opción 7
+            valoresMaximosMinimos(lista)
+            
+
+        input("\nPresione ENTER para volver al menú.")
+        print("\n\n")
+
+
+# Punto de entrada al programa
 main()
